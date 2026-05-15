@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NMB TV PRO | الترفيه المطلق</title>
+    <!-- كود إثبات ملكية جوجل المضاف -->
+    <meta name="google-site-verification" content="csCrFcNHnZCiqu7q_hgoB_tP07Ww1-rN2FTRYap-W_4" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -177,7 +180,6 @@
             } else if(p === 'player') {
                 document.getElementById('playerPage').classList.add('active');
             } else if(p === 'watchlist') {
-                // ميزة "قائمتي" (تجريبية تعرض كل الأفلام حالياً)
                 document.getElementById('homePage').classList.add('active');
                 document.getElementById('nav-watchlist').classList.add('active');
                 render(movies.slice(0, 3)); 
@@ -201,6 +203,7 @@
                 return movieTitle.includes(query);
             });
             
+            
             render(filtered);
         }
 
@@ -208,6 +211,7 @@
             const nav = document.getElementById('navbar');
             window.scrollY > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
         };
+        
 
         
         render(movies);
