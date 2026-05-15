@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMB TV PRO | الترفيه المطلق</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #e50914; --bg: #0b0b0b; --card-bg: #141414; --text: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* Navigation */
+        header { 
+            position: fixed; top: 0; width: 100%; padding: 15px 4%; 
+            display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            z-index: 1000; transition: 0.4s;
+        }
+        header.scrolled { background: #000; padding: 10px 4%; border-bottom: 1px solid #222; }
+        
+        .right-side { display: flex; align-items: center; gap: 30px; }
+        .logo { color: var(--primary); font-size: 2.2rem; font-weight: 900; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .logo span { background: var(--primary); color: white; padding: 0 5px; border-radius: 4px; margin-right: 5px; font-size: 1.5rem; }
+        
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: #e5e5e5; text-decoration: none; font-size: 1.1rem; transition: 0.3s; cursor: pointer; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); font-weight: bold; }
+
+        .search-container { position: relative; display: flex; align-items: center; background: rgba(255,255,255,0.15); border-radius: 4px; padding: 5px 15px; width: 300px; }
+        .search-container input { background: transparent; border: none; color: white; width: 100%; outline: none; padding-right: 10px; }
+        .search-container i { color: #bbb; font-size: 0.9rem; }
+
+        /* Hero Section */
+        .hero { 
+            height: 85vh; position: relative; display: flex; align-items: center; padding: 0 8%;
+            background: url('main_bg.jpg.png') center/cover no-repeat;
+        }
+        .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.9) 20%, transparent 60%), linear-gradient(to top, var(--bg) 5%, transparent 40%); }
+        
+        .hero-content { position: relative; z-index: 10; max-width: 600px; text-align: center; margin: 0 auto; border: 1px solid rgba(255,255,255,0.2); padding: 40px; border-radius: 15px; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); }
+        .hero-content h3 { color: var(--primary); font-weight: bold; margin-bottom: 10px; }
+        .hero-content h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 15px; }
+        .hero-content p { color: #ccc; font-size: 1.1rem; margin-bottom: 25px; }
+
+        /* Filters */
+        .filter-container { display: flex; justify-content: center; gap: 15px; margin-top: -30px; position: relative; z-index: 100; flex-wrap: wrap; }
+        .tab { background: #222; padding: 8px 25px; border-radius: 5px; cursor: pointer; transition: 0.3s; border: 1px solid #444; color: #eee; }
+        .tab.active { background: #444; border-color: #777; font-weight: bold; }
+
+        /* Grid */
+        .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding: 50px 6%; }
+        .movie-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; transition: 0.4s; position: relative; border-bottom: 3px solid transparent; cursor: pointer; }
+        .movie-card:hover { transform: scale(1.08); z-index: 50; border-bottom-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
+        .movie-card img { width: 100%; height: 260px; object-fit: cover; }
+        .card-info { padding: 12px; text-align: center; }
+        .card-info h4 { font-size: 0.95rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #888; }
+        .card-meta .rate { color: #ffc107; font-weight: bold; }
+
+        /* Detail Page */
+        .page { display: none; padding-top: 100px; min-height: 100vh; }
+        .page.active { display: block; }
+        .video-container { width: 85%; margin: 0 auto; background: #000; border-radius: 15px; overflow: hidden; box-shadow: 0 0 50px rgba(229,9,20,0.2); }
+        iframe { width: 100%; aspect-ratio: 16/9; border: none; }
+
+        .btn-back { background: var(--primary); color: white; padding: 10px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .btn-back:hover { opacity: 0.8; }
+
+        footer { text-align: center; padding: 40px; color: #555; border-top: 1px solid #222; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <header id="navbar">
+        <div class="right-side">
+            <a href="#" class="logo" onclick="showPage('home')">NMB <span>TV</span></a>
+            <div class="nav-links">
+                <a id="nav-home" class="active" onclick="showPage('home')">الرئيسية</a>
+                <a id="nav-movies" onclick="filterCat('الكل', null); showPage('home')">الأفلام</a>
+                
+            </div>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="ابحث عن فيلم أو أنمي..." onkeyup="searchMovies(this.value)">
+            <i class="fas fa-search"></i>
+        </div>
+    </header>
+
+    <div id="homePage" class="page active">
+        <section class="hero">
+            <div class="hero-content">
+                <h3>حصرياً على NMB</h3>
+                <h1>عالم لا ينتهي من الترفيه</h1>
+                <p>استمتع بمشاهدة أحدث الأفلام العالمية، الأنمي، والمسلسلات الحصرية بجودة فائقة السرعة.</p>
+            </div>
+        </section>
+
+        <div class="filter-container">
+            <div class="tab active" onclick="filterCat('الكل', this)">الكل</div>
+            <div class="tab" onclick="filterCat('أكشن', this)">أكشن</div>
+            <div class="tab" onclick="filterCat('خيال علمي', this)">خيال علمي</div>
+            <div class="tab" onclick="filterCat('دراما', this)">دراما</div>
+            <div class="tab" onclick="filterCat('رعب', this)">رعب</div>
+            <div class="tab" onclick="filterCat('أنمي', this)">أنمي</div>
+        </div>
+
+        <div class="movies-grid" id="mainGrid"></div>
+    </div>
+
+    <div id="playerPage" class="page">
+        <div class="video-container">
+            <iframe id="mainPlayer" src="" allowfullscreen></iframe>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <h2 id="movieTitleDisplay"></h2>
+            <button class="btn-back" onclick="showPage('home')">العودة للرئيسية</button>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 NMB TV PRO - جميع الحقوق محفوظة</footer>
+
+    <script>
+        const movies = [
+            
+            { id: 1, title: "Barbie - باربي", cat: "خيال علمي", year: 2023, rate: 6.7, img: "barbie.jpg", url: "https://vidsrc.to/embed/movie/tt1517268" },
+            { id: 2, title: "ماد ماكس: طريق الغضب - Mad Max: Fury Road", cat: "أكشن", year: 2015, rate: 4.5, img: "madmax.png", url: "https://vidsrc.to/embed/movie/tt1392190" },
+            { id: 3, title: "المهمة المستحيلة - Misson Impossible", cat: "أكشن", year: 2023, rate: 4.5, img: "misson.jpg", url: "https://vidsrc.to/embed/movie/tt9603212" },
+            { id: 4, title: "بين النجوم - Interstellar", cat: "خيال علمي", year: 2014, rate: 6.5, img: "installer.jpg", url: "https://vidsrc.to/embed/movie/tt0816692" },
+            { id: 5, title: "قتلة زهرة القمر", cat: "دراما", year: 2023, rate: 4.5, img: "killers.jpg", url: "https://vidsrc.to/embed/movie/tt5537002" },
+            { id: 6, title: "الحوت - The Whale", cat: "دراما", year: 2022, rate: 4.7, img: "thewhale.jpg", url: "https://vidsrc.to/embed/movie/tt13833688" },
+            { id: 7, title: "تحدث الي - Talk to Me", cat: "رعب", year: 2023, rate: 6.2, img: "talktome.jpg", url: "https://vidsrc.to/embed/movie/tt10638522" },
+            { id: 8, title: "Demon Slayer: Mugen Train", cat: "أنمي", year: 2020, rate: 8.2, img: "demonslayer.png", url: "https://vidsrc.to/embed/movie/tt11032374" },
+            { id: 9, title: "One Piece Film: Red", cat: "أنمي", year: 2022, rate: 8.6, img: "onepiece.jpg", url: "https://vidsrc.to/embed/movie/tt16183464" },
+            { id: 10, title: "Jujutsu Kaisen 0", cat: "أنمي", year: 2021, rate: 7.8, img: "jujutsu.png", url: "https://vidsrc.to/embed/movie/tt14338666" }
+            
+        
+        ];
+
+        function render(data) {
+            const grid = document.getElementById('mainGrid');
+            grid.innerHTML = '';
+            if(data.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #666;">لا توجد نتائج مطابقة لبحثك</div>';
+                return;
+            }
+            data.forEach(m => {
+                grid.innerHTML += `
+                    <div class="movie-card" onclick="playMovie('${m.url}', '${m.title}')">
+                        <img src="${m.img}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/200x300?text=NMB+TV'">
+                        <div class="card-info">
+                            <h4>${m.title}</h4>
+                            <div class="card-meta">
+                                <span>${m.year}</span>
+                                <span class="rate">⭐ ${m.rate}</span>
+                            </div>
+                            <div style="font-size: 0.7rem; margin-top:10px; color:var(--primary); font-weight:bold;">● مشاهدة الآن</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function playMovie(url, title) {
+            document.getElementById('mainPlayer').src = url;
+            document.getElementById('movieTitleDisplay').innerText = title;
+            showPage('player');
+        }
+
+        function showPage(p) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            
+            if(p === 'home') {
+                document.getElementById('homePage').classList.add('active');
+                document.getElementById('nav-home').classList.add('active');
+            } else if(p === 'player') {
+                document.getElementById('playerPage').classList.add('active');
+            } else if(p === 'watchlist') {
+                // ميزة "قائمتي" (تجريبية تعرض كل الأفلام حالياً)
+                document.getElementById('homePage').classList.add('active');
+                document.getElementById('nav-watchlist').classList.add('active');
+                render(movies.slice(0, 3)); 
+            }
+            window.scrollTo(0,0);
+        }
+
+        function filterCat(c, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if(el) el.classList.add('active');
+            else document.querySelector('.tab').classList.add('active'); 
+
+            render(c === 'الكل' ? movies : movies.filter(m => m.cat === c));
+        }
+
+        function searchMovies(q) {
+            const query = q.trim().toLowerCase().replace(/\s+/g, ' ');
+            
+            const filtered = movies.filter(m => {
+                const movieTitle = m.title.toLowerCase().replace(/\s+/g, ' ');
+                return movieTitle.includes(query);
+            });
+            
+            render(filtered);
+        }
+
+        window.onscroll = () => {
+            const nav = document.getElementById('navbar');
+            window.scrollY > 50 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled');
+        };
+
+        
+        render(movies);
+    </script>
+</body>
+</html>
